@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+
+<xsd:schema xmlns="http://www.lanner.me/schema/spring-extension-validation"
+            xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+            targetNamespace="http://www.lanner.me/schema/spring-extension-validation"
+            elementFormDefault="qualified"
+            attributeFormDefault="unqualified">
+
+    <xsd:annotation>
+        <xsd:documentation><![CDATA[
+	Defines the elements used in the Spring Framework's declarative
+	parameter validation infrastructure.
+		]]></xsd:documentation>
+    </xsd:annotation>
+
+    <xsd:element name="annotation-driven">
+        <xsd:annotation>
+            <xsd:documentation><![CDATA[
+	Indicates that transaction configuration is defined by Java 5
+	annotations on bean classes, and that proxies are automatically
+	to be created for the relevant annotated beans.
+
+	The default annotations supported are Spring's @Transactional
+	and EJB3's @TransactionAttribute (if available).
+
+	Transaction semantics such as propagation settings, the isolation level,
+	the rollback rules, etc are all defined in the annotation metadata.
+
+	See org.springframework.transaction.annotation.EnableTransactionManagement Javadoc
+	for information on code-based alternatives to this XML element.
+	    	]]></xsd:documentation>
+        </xsd:annotation>
+    </xsd:element>
+
+</xsd:schema>
