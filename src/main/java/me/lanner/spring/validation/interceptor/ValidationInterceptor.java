@@ -9,6 +9,7 @@ import org.aopalliance.intercept.MethodInvocation;
 public class ValidationInterceptor implements MethodInterceptor {
     @Override
     public Object invoke(MethodInvocation invocation) throws Throwable {
+        System.out.println(invocation.getMethod().getName());
         return invocation.proceed();
     }
 }

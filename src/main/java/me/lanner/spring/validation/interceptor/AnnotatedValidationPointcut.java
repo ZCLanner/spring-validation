@@ -12,27 +12,12 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 public class AnnotatedValidationPointcut extends StaticMethodMatcherPointcut {
 
-    private ConcurrentHashMap<Class<?>, Boolean> classMatchingCache = new ConcurrentHashMap<>();
-
     @Override
     public boolean matches(Method method, Class<?> targetClass) {
-        return matches(targetClass) || matches(method);
-    }
-
-    private boolean matches(Class<?> targetClass) {
-        if (classMatchingCache.containsKey(targetClass)) {
-            return classMatchingCache.get(targetClass);
-        }
-        Valid validAnnotation = targetClass.getAnnotation(Valid.class);
-        boolean matches = (validAnnotation != null);
-        classMatchingCache.putIfAbsent(targetClass, matches);
-        return matches;
+        return matches(method);
     }
 
     private boolean matches(Method method) {
-        if (method.getAnnotation(Valid.class) != null) {
-            return true;
-        }
         Annotation[][] annotations = method.getParameterAnnotations();
         if (annotations == null) {
             return false;
