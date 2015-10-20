@@ -1,4 +1,4 @@
-package me.lanner.spring.validation.constraint;
+package me.lanner.spring.validation.validators;
 
 /**
  * Created by zhaochen.zc on 15/10/19.

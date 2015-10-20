@@ -1,5 +1,7 @@
 package me.lanner.spring.validation.constraint;
 
+import me.lanner.spring.validation.validators.Validator;
+
 import java.lang.annotation.Retention;
 
 import static java.lang.annotation.ElementType.*;

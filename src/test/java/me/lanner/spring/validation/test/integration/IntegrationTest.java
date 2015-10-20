@@ -19,6 +19,6 @@ public class IntegrationTest {
 
     @Test
     public void doTest() {
-        plainObject.functionA("Test me!");
+        plainObject.functionA(null);
     }
 }
