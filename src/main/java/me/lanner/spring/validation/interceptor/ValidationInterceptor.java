@@ -17,6 +17,7 @@ import java.lang.annotation.Annotation;
  */
 public class ValidationInterceptor implements MethodInterceptor, BeanFactoryAware {
     @Override
+    @SuppressWarnings("unchecked")
     public Object invoke(MethodInvocation invocation) throws Throwable {
         Annotation[][] paramAnnotations = invocation.getMethod().getParameterAnnotations();
         Object[] params = invocation.getArguments();
@@ -38,7 +39,7 @@ public class ValidationInterceptor implements MethodInterceptor, BeanFactoryAwar
                     if (validator == null) {
                         continue;
                     }
-                    errMsg = validator.valid(param);
+                    errMsg = validator.valid(param, annotation);
                     if (!StringUtils.isEmpty(errMsg)) {
                         break;
                     }

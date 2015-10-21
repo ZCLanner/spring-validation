@@ -11,4 +11,5 @@ import java.lang.annotation.RetentionPolicy;
 @ValidatedBy(validator = NotNullValidator.class)
 @Retention(RetentionPolicy.RUNTIME)
 public @interface NotNull {
+    String value();
 }

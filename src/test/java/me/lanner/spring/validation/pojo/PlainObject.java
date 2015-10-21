@@ -7,7 +7,7 @@ import me.lanner.spring.validation.constraint.NotNull;
  */
 public class PlainObject {
 
-    public void functionA(@NotNull String str) {
+    public void functionA(@NotNull("Str can't be null") String str) {
 
     }
 }
