@@ -19,6 +19,10 @@ public class IntegrationTest {
 
     @Test
     public void doTest() {
-        plainObject.functionA(null);
+        try {
+            plainObject.functionA(null);
+        } catch (Exception ex) {
+            assert ex.getMessage().equals("Str can't be null");
+        }
     }
 }

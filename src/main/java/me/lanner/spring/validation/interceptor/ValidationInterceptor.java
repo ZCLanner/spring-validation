@@ -1,64 +1,62 @@
 package me.lanner.spring.validation.interceptor;
 
-import me.lanner.spring.validation.constraint.ValidatedBy;
+import me.lanner.spring.validation.handler.ConstraintViolationHandler;
+import me.lanner.spring.validation.handler.ViolationMessageHolder;
 import me.lanner.spring.validation.validators.Validator;
 import org.aopalliance.intercept.MethodInterceptor;
 import org.aopalliance.intercept.MethodInvocation;
-import org.springframework.beans.BeansException;
-import org.springframework.beans.factory.BeanFactory;
-import org.springframework.beans.factory.BeanFactoryAware;
 import org.springframework.util.StringUtils;
 
-import javax.validation.Valid;
 import java.lang.annotation.Annotation;
 
 /**
  * Created by zhaochen.zc on 15/9/23.
  */
-public class ValidationInterceptor implements MethodInterceptor, BeanFactoryAware {
+public class ValidationInterceptor implements MethodInterceptor {
+
+    private ValidatorInterceptorSupport validatorInterceptorSupport;
+    public void setValidatorInterceptorSupport(ValidatorInterceptorSupport support) {
+        assert support != null;
+        this.validatorInterceptorSupport = support;
+    }
+
+    private ConstraintViolationHandler constraintViolationHandler;
+    public void setConstraintViolationHandler(ConstraintViolationHandler handler) {
+        assert handler != null;
+        this.constraintViolationHandler = handler;
+    }
+
     @Override
     @SuppressWarnings("unchecked")
     public Object invoke(MethodInvocation invocation) throws Throwable {
         Annotation[][] paramAnnotations = invocation.getMethod().getParameterAnnotations();
         Object[] params = invocation.getArguments();
+        if (paramAnnotations == null) {
+            return invocation.proceed();
+        }
+
         String errMsg = "";
-        if (paramAnnotations != null) {
-            for (int i = 0; i < paramAnnotations.length; i++) {
-                Annotation[] annotations = paramAnnotations[i];
-                Object param = params[i];
-                for (Annotation annotation : annotations) {
-                    if (annotation instanceof Valid) {
-                        continue;
-                    }
-                    ValidatedBy validatedBy = annotation.annotationType().getAnnotation(ValidatedBy.class);
-                    if (validatedBy == null) {
-                        continue;
-                    }
-                    Class<? extends Validator> validatorClass = validatedBy.validator();
-                    Validator validator = beanFactory.getBean(validatorClass);
-                    if (validator == null) {
-                        continue;
-                    }
-                    errMsg = validator.valid(param, annotation);
-                    if (!StringUtils.isEmpty(errMsg)) {
-                        break;
-                    }
-                }
+        Annotation violatedConstraint = null;
+        Object violatingObject = null;
+        for (int i = 0; i < paramAnnotations.length; i++) {
+            Annotation[] annotations = paramAnnotations[i];
+            Object param = params[i];
+            for (Annotation annotation : annotations) {
+                Validator validator = validatorInterceptorSupport.getValidator(annotation);
+                errMsg = validator.valid(param, annotation);
                 if (!StringUtils.isEmpty(errMsg)) {
+                    violatedConstraint = annotation;
+                    violatingObject = param;
                     break;
                 }
             }
+            if (!StringUtils.isEmpty(errMsg)) {
+                break;
+            }
         }
         if (!StringUtils.isEmpty(errMsg)) {
-            throw new RuntimeException(errMsg);
+            constraintViolationHandler.onConstraintViolation(violatedConstraint, violatingObject, errMsg);
         }
         return invocation.proceed();
-    }
-
-    private BeanFactory beanFactory;
-
-    @Override
-    public void setBeanFactory(BeanFactory beanFactory) throws BeansException {
-        this.beanFactory = beanFactory;
     }
 }

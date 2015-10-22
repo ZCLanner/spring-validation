@@ -1,7 +1,10 @@
 package me.lanner.spring.validation.config;
 
+import me.lanner.spring.validation.handler.ConstraintViolationHandler;
+import me.lanner.spring.validation.handler.ConstraintViolationRaiseExceptionHandler;
 import me.lanner.spring.validation.interceptor.BeanFactoryAnnotatedValidationPointcutAdvisor;
 import me.lanner.spring.validation.interceptor.ValidationInterceptor;
+import me.lanner.spring.validation.interceptor.DefaultValidatorInterceptorSupport;
 import org.springframework.aop.config.AopNamespaceUtils;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.beans.factory.parsing.BeanComponentDefinition;
@@ -20,9 +23,21 @@ public class AnnotationDrivenBeanDefinitionParser implements BeanDefinitionParse
         AopNamespaceUtils.registerAspectJAutoProxyCreatorIfNecessary(parserContext, element);
         Object eleSource = parserContext.extractSource(element);
 
+        RootBeanDefinition interceptorSupportDef = new RootBeanDefinition(DefaultValidatorInterceptorSupport.class);
+        interceptorSupportDef.setSource(eleSource);
+        interceptorSupportDef.setRole(BeanDefinition.ROLE_INFRASTRUCTURE);
+        parserContext.getReaderContext().registerWithGeneratedName(interceptorSupportDef);
+
+        RootBeanDefinition violationHandlerDef = new RootBeanDefinition(ConstraintViolationRaiseExceptionHandler.class);
+        violationHandlerDef.setSource(eleSource);
+        violationHandlerDef.setRole(BeanDefinition.ROLE_INFRASTRUCTURE);
+        parserContext.getReaderContext().registerWithGeneratedName(violationHandlerDef);
+
         RootBeanDefinition interceptorDef = new RootBeanDefinition(ValidationInterceptor.class);
         interceptorDef.setSource(eleSource);
         interceptorDef.setRole(BeanDefinition.ROLE_INFRASTRUCTURE);
+        interceptorDef.getPropertyValues().add("validatorInterceptorSupport", interceptorSupportDef);
+        interceptorDef.getPropertyValues().add("constraintViolationHandler", violationHandlerDef);
         String interceptorName = parserContext.getReaderContext().registerWithGeneratedName(interceptorDef);
 
         RootBeanDefinition advisorDef = new RootBeanDefinition(BeanFactoryAnnotatedValidationPointcutAdvisor.class);
