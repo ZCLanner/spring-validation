@@ -19,9 +19,6 @@ public class AnnotatedValidationPointcut extends StaticMethodMatcherPointcut {
 
     private boolean matches(Method method) {
         Annotation[][] annotations = method.getParameterAnnotations();
-        if (annotations == null) {
-            return false;
-        }
         for (Annotation[] annotationArray : annotations) {
             if (annotationArray == null) {
                 continue;

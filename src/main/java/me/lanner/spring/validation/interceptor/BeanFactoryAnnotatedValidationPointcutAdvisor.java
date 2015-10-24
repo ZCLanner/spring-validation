@@ -8,7 +8,11 @@ import org.springframework.aop.support.AbstractBeanFactoryPointcutAdvisor;
  */
 public class BeanFactoryAnnotatedValidationPointcutAdvisor extends AbstractBeanFactoryPointcutAdvisor {
 
-    private Pointcut pointcut = new AnnotatedValidationPointcut();
+    private Pointcut pointcut;
+
+    public BeanFactoryAnnotatedValidationPointcutAdvisor() {
+        this.pointcut = new AnnotatedValidationPointcut();
+    }
 
     @Override
     public Pointcut getPointcut() {

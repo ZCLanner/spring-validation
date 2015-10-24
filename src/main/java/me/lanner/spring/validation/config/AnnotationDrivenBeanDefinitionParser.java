@@ -1,10 +1,9 @@
 package me.lanner.spring.validation.config;
 
-import me.lanner.spring.validation.handler.ConstraintViolationHandler;
 import me.lanner.spring.validation.handler.ConstraintViolationRaiseExceptionHandler;
 import me.lanner.spring.validation.interceptor.BeanFactoryAnnotatedValidationPointcutAdvisor;
-import me.lanner.spring.validation.interceptor.ValidationInterceptor;
 import me.lanner.spring.validation.interceptor.DefaultValidatorInterceptorSupport;
+import me.lanner.spring.validation.interceptor.ValidationInterceptor;
 import org.springframework.aop.config.AopNamespaceUtils;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.beans.factory.parsing.BeanComponentDefinition;
@@ -52,5 +51,9 @@ public class AnnotationDrivenBeanDefinitionParser implements BeanDefinitionParse
         parserContext.registerComponent(compositeDef);
 
         return null;
+    }
+
+    private void registerValidatorBeans() {
+
     }
 }

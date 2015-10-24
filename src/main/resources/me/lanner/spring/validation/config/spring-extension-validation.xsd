@@ -16,18 +16,8 @@
     <xsd:element name="annotation-driven">
         <xsd:annotation>
             <xsd:documentation><![CDATA[
-	Indicates that transaction configuration is defined by Java 5
-	annotations on bean classes, and that proxies are automatically
-	to be created for the relevant annotated beans.
-
-	The default annotations supported are Spring's @Transactional
-	and EJB3's @TransactionAttribute (if available).
-
-	Transaction semantics such as propagation settings, the isolation level,
-	the rollback rules, etc are all defined in the annotation metadata.
-
-	See org.springframework.transaction.annotation.EnableTransactionManagement Javadoc
-	for information on code-based alternatives to this XML element.
+    Indicated that method which has parameters annotated with @Valid or
+    other constraint annotation will be checked automatically when it is called.
 	    	]]></xsd:documentation>
         </xsd:annotation>
     </xsd:element>

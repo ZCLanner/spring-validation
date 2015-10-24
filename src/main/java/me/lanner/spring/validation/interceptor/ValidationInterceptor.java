@@ -1,7 +1,6 @@
 package me.lanner.spring.validation.interceptor;
 
 import me.lanner.spring.validation.handler.ConstraintViolationHandler;
-import me.lanner.spring.validation.handler.ViolationMessageHolder;
 import me.lanner.spring.validation.validators.Validator;
 import org.aopalliance.intercept.MethodInterceptor;
 import org.aopalliance.intercept.MethodInvocation;
@@ -31,10 +30,6 @@ public class ValidationInterceptor implements MethodInterceptor {
     public Object invoke(MethodInvocation invocation) throws Throwable {
         Annotation[][] paramAnnotations = invocation.getMethod().getParameterAnnotations();
         Object[] params = invocation.getArguments();
-        if (paramAnnotations == null) {
-            return invocation.proceed();
-        }
-
         String errMsg = "";
         Annotation violatedConstraint = null;
         Object violatingObject = null;
