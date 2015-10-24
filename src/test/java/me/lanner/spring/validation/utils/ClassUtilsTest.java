@@ -2,7 +2,8 @@ package me.lanner.spring.validation.utils;
 
 import org.junit.Test;
 import org.springframework.util.StringUtils;
-import sun.security.validator.Validator;
+
+import me.lanner.spring.validation.validators.Validator;
 
 import java.io.IOException;
 import java.util.Set;

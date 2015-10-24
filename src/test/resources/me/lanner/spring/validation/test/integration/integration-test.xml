@@ -9,6 +9,8 @@
 
     <bean id="plainObject" class="me.lanner.spring.validation.pojo.PlainObject" />
     <validation:annotation-driven />
+    <!-- 
     <bean id="notNullValidator" class="me.lanner.spring.validation.validators.NotNullValidator" />
+    -->
 
 </beans>

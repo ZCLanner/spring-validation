@@ -26,13 +26,13 @@ public class ClassUtils {
         }
         Set<Class<?>> classes = new HashSet<>();
         for (File directory : dirs) {
-            classes.addAll(loadClasses(directory, packageName));
+            classes.addAll(loadClasses(directory, packageName, interfaceClazz));
         }
         return classes;
     }
 
-    private static List<Class<?>> loadClasses(File directory, String packageName) throws ClassNotFoundException {
-        List classes = new ArrayList();
+    private static List<Class<?>> loadClasses(File directory, String packageName, Class<?> interfaceClazz) throws ClassNotFoundException {
+        List<Class<?>> classes = new ArrayList<Class<?>>();
         if (!directory.exists()) {
             return classes;
         }
@@ -40,9 +40,15 @@ public class ClassUtils {
         for (File file : files) {
             if (file.isDirectory()) {
                 assert !file.getName().contains(".");
-                classes.addAll(loadClasses(file, packageName + "." + file.getName()));
+                classes.addAll(loadClasses(file, packageName + "." + file.getName(), interfaceClazz));
             } else if (file.getName().endsWith(".class")) {
-                classes.add(Class.forName(packageName + "." + file.getName().substring(0, file.getName().length() - ".class".length())));
+            	String className = file.getName().substring(0, file.getName().length()-".class".length());
+            	className = packageName + "." + className;
+            	Class<?> clazz = Class.forName(className);
+            	if (interfaceClazz != clazz && 
+            			interfaceClazz.isAssignableFrom(clazz)) {
+            		classes.add(clazz);
+            	}
             }
         }
         return classes;
