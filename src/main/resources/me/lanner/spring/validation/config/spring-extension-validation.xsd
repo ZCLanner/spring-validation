@@ -20,6 +20,11 @@
     other constraint annotation will be checked automatically when it is called.
 	    	]]></xsd:documentation>
         </xsd:annotation>
+        <xsd:complexType>
+            <xsd:sequence>
+                <xsd:element name="onConstraintViolated" type="xsd:string" minOccurs="0"/>
+            </xsd:sequence>
+        </xsd:complexType>
     </xsd:element>
 
 </xsd:schema>

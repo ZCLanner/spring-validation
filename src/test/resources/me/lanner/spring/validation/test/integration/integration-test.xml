@@ -8,9 +8,8 @@
        http://www.lanner.me/schema/validation/spring-extension-validation.xsd">
 
     <bean id="plainObject" class="me.lanner.spring.validation.pojo.PlainObject" />
-    <validation:annotation-driven />
-    <!-- 
-    <bean id="notNullValidator" class="me.lanner.spring.validation.validators.NotNullValidator" />
-    -->
 
+    <validation:annotation-driven>
+        <validation:onConstraintViolated>throwException</validation:onConstraintViolated>
+    </validation:annotation-driven>
 </beans>
