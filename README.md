@@ -7,7 +7,7 @@
 spring-aop 3.2.6.RELEASE +
 
 基本使用方法
-====
+----
 
 1. 假设有一个类叫`PlainObject`，它有一个方法叫`functionA(String str)`
 
@@ -46,3 +46,40 @@ spring-aop 3.2.6.RELEASE +
 
 4. 经过以上3步配置，当你用一个空的参数传入`PlainObject#functionA(String)`时，你会得到一个异常，异常信息为`"Str cannot be null"`
 
+自定义约束
+----
+
+如果你想支持除了`@NotNull`以外更多的约束，你可以自定义约束。想完成自定义约束，你需要多做一些工作。
+
+比如要自定义一个限定整数最小值的约束`@Min`
+
+1. 自定义校验器Validator，Validator是参数校验框架的一个接口，全名是`me.lanner.spring.validation.validators.Validator`，它有一个方法`valid`，主要是对传入的参数进行校验，如果不符合约束，返回错误信息。
+
+    ```java
+    public class MinValidator extends Validator<Min> {
+        public String valid(Object param, Min minAnnotation) {
+            int minValue = min.minValue();
+            // 比较param与minValue的关系，如果param比minValue还要小，返回错误信息
+        }
+    }
+    ```
+
+2. 自定义约束注解`@Min`，在自定义是要注意三点：
+    
+    - 注解必须在`RUNTIME`时生效
+    - 注解必须可以被放在参数上
+    - 注解必须用`@ValidatedBy`指名由哪一个`Validator`来校验这个约束
+    
+    ```java
+    @ValidatedBy(validator = MinValidator.class)
+    @Retention(RetentionPolicy.RUNTIME)
+    public @interface NotNull {
+        String minValue();
+    }
+    ```
+    
+3. 把`MinValidator`放到Spring的IOC容器中
+
+4. 尽情使用你自定义的注解吧
+
+__提醒：由于MinValidator是被放到IOC容器中的，所以你可以像使用一般的Spring的Bean一样，向MinValidator中注入其他Spring的Bean。__
